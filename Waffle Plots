@@ -1,0 +1,42 @@
+#https://github.com/hrbrmstr/waffle
+install.packages("devtools")
+install.packages("waffle", repos = "https://cinc.rud.is")
+
+
+library(waffle)
+library(magrittr)
+library(hrbrthemes)
+library(ggplot2)
+library(dplyr)
+library(waffle)
+
+
+#reorder variable by descending value 
+
+data$variable <- reorder(data$variable , -as.numeric(data$Value, data$Year))
+
+
+#Create plot with geom_waffle 
+
+ggplot(data, aes(fill = factor(Year), values = PercentValidation))+          #required aes are (fill = ) and (values = ) 
+  geom_waffle(color = "white", size = 0.2, n_rows = 10, flip = TRUE) +       #color = outline, n_row = number of squares   
+  facet_wrap(~IC, nrow = 2, strip.position = "bottom")+
+  scale_x_continuous(expand = c(0,0)) + 
+  scale_y_continuous(labels = function(x) x * 10,                            # make this multiplyer the same as n_rows
+                     expand = c(0,0)) +
+  ggthemes::scale_fill_tableau(name=NULL) +
+  coord_equal() +                                                           # 
+  labs(
+    title = "Values by Variable (2014-2018)",
+    y = "Count"
+  ) +
+  theme_minimal()+
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+  guides(fill = guide_legend(reverse = TRUE))+
+  theme(panel.grid = element_blank(), axis.ticks.y = element_line()) +        #remove panel 
+  theme(strip.text = element_text(face = "bold",  size = rel(1)),             #edit strop panels from facets 
+        strip.background = element_rect(fill = "grey100", color = "grey90"))
+
+
+
+

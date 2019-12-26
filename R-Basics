@@ -1,1 +1,48 @@
+#Read excel files in R 
 
+install.packages("readxl")
+library(readxl)
+library(tidyverse)
+
+setwd() 
+
+#read_excel function imports the first sheet by default 
+data <- read_excel("data.xlsx") 
+
+
+#import a specific worksheet by sheet index 
+data_2 <- read_excel("data.xlsx", sheet = 4) 
+
+#import a specific worksheet by sheet name 
+data_3 <- read_excel("data.xlsx", sheet = "2012") 
+
+
+#import entire workbook with more than one sheet  - use lapply and excel_sheet function 
+
+  #  1. List names of all sheets in spreadsheets
+sheet_list <- excel_sheets("data.xlsx")
+
+ #  2. Convert sheet_list into a list - converts names of tabs from character vector into list
+x <- as.list(sheet_list)
+
+#   3. Load all sheets in a workbook, using lapply
+
+data <- lapply(sheet_list, read_excel, path = "data.xlsx")
+names(data) <- c(x)
+
+
+#4. Subset data from each tab/list 
+
+data_tab <- data[["stuff"]]
+
+
+
+#Load Multiple workbooks with xlsx extension in working directory 
+
+#   1. List names of all workbooks with the .xlsx extension 
+data_list <- list.files(pattern = "*.xlsx")
+View(data_list)
+
+#   2.  Load all workbooks with xlsx extension in wd 
+data.list <- lapply(data_list, read_excel)
+str(data_list)

@@ -1,0 +1,87 @@
+# NO CUSTOMIZATION 
+
+Agnes_500 <- Agnes %>% 
+  filter(Number < 500)
+
+
+#melt data 
+
+Agnes_500 <- Agnes_500 %>% gather(key = "Stage", value ="value", c(2:5)) 
+
+
+# Set a number of 'empty bar' to add at the end of each group 
+#(Give each category and variable the same id number)
+
+
+
+
+Agnes_500 <- Agnes_500 %>% arrange(Categories)
+
+nObsType <- nlevels(as.factor(Agnes_500$Stage))
+Agnes_500$id <- factor(rep( seq(1, nrow(Agnes_500)/nObsType) , each=nObsType))
+
+
+
+label_data_500 <- Agnes_500 %>% 
+  group_by(id, Categories) %>%
+  summarize(tot = sum(value)) 
+
+number_of_bar_500 <- nrow(label_data_500)
+angle_500 <- 90 - 360 * (as.numeric(label_data_500$id) - 0.5) /number_of_bar_500     # I substract 0.5 because the letter must have the angle of the center of the bars. Not extreme right(1) or extreme left (0)
+label_data_500$hjust <- ifelse( angle_500 < -90, 1, 0)
+label_data_500$angle_500 <- ifelse(angle_500 < -90, angle_500+180, angle_500)
+
+# prepare a data frame for base lines
+base_data_500 <- Agnes_500 %>% 
+  summarize(start=min(as.numeric(id)), end=max(as.numeric(id)) - empty_bar) %>% 
+  rowwise() %>% 
+  mutate(title=mean(c(start, end)))
+
+# prepare a data frame for grid (scales)
+grid_data_500 <- base_data_500
+grid_data_500$end <- grid_data_500$end[ c( nrow(grid_data_500), 1:nrow(grid_data_500)-1)] + 1
+grid_data_500$start <- grid_data_500$start - 1
+grid_data_500 <- grid_data_500[-1,]
+
+
+
+Agnes_500$Stage <- factor(Agnes_500$Stage, levels = c("FM", "GM", "Revisit", "New"))
+a <- ggplot(Agnes_500)+
+  geom_bar(aes(x = id, y = value, fill = Stage), stat="identity", alpha=0.5) +
+  scale_fill_viridis(discrete=TRUE)+ 
+  
+
+  #Label the values for axis you create 
+  ggplot2::annotate("text", x = rep(max(as.numeric(Agnes_500$id)),7), y = c(0, 2, 4, 6, 8, 10, 12), 
+                    label = c("0", "2", "4", "6", "8", "10", "12"), 
+                    color="grey", size= 60 , angle=0, fontface="bold", hjust=1)+
+  
+  
+  ylim(-12, 12) +
+  theme_minimal()+
+  theme(
+    legend.position = "none",
+    axis.text = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    plot.margin = unit(rep(-1,4), "cm") 
+  ) +
+  coord_polar() +
+  geom_text(data=label_data_500, aes(x=id, y=tot, label= Categories, hjust=hjust), 
+            color="black", fontface="bold",alpha=0.6, size= 60, angle= label_data_500$angle_500, inherit.aes = FALSE) 
+
+ggsave(a, file ="Maintenancefreq_CircularAgnes500.pdf", width = 250, height= 150, dpi = 300, limitsize = FALSE,
+       path = "C:/Users/gichimujw/OneDrive - National Institutes of Health/00_Data Analysis/Validation Analysis/PS Trend_Category Size/Output") 
+
+
+
+
+
+
+
+
+
+
+
+
+

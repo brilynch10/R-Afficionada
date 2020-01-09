@@ -71,7 +71,7 @@ a <- ggplot(Agnes_500)+
             color="black", fontface="bold",alpha=0.6, size= 60, angle= label_data_500$angle_500, inherit.aes = FALSE) 
 
 ggsave(a, file ="Maintenancefreq_CircularAgnes500.pdf", width = 250, height= 150, dpi = 300, limitsize = FALSE,
-       path = "C:/Users/gichimujw/OneDrive - National Institutes of Health/00_Data Analysis/Validation Analysis/PS Trend_Category Size/Output") 
+       path = "") 
 
 
 

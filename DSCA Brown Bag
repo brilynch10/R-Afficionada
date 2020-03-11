@@ -11,19 +11,21 @@ setwd("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [
 FY2019<- read_xlsx("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [E] - Data Analysis/DSCA Brown Bag/PS_Trend_2020EX.xlsx")
 
 ######Importing Sheet with Disease Category Global ID 
-Mark <- read_xlsx("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [E] - Data Analysis/DSCA Brown Bag/Mark.xlsx")
+Global_ID <- read_xlsx("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [E] - Data Analysis/DSCA Brown Bag/Mark.xlsx")
 
 ######Import Sheet with RCDC Automated Categories 
-Andrei <- read_xlsx("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [E] - Data Analysis/DSCA Brown Bag/Andrei.xlsx")
+RCDC_Automated <- read_xlsx("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [E] - Data Analysis/DSCA Brown Bag/Andrei.xlsx")
 #Changing the name of the first column
-names(Andrei)[names(Andrei) == "Categories"] = "All_Categories"
+names(RCDC_Automated)[names(RCDC_Automated) == "Categories"] = "All_Categories"
 
 
+############# CREATE DATAFRAME 
 
-#Merge by Categorical name 
-FY19 <- merge(FY2019,Mark, by = "Categories", all.x = TRUE)
-#Merge the data by Global_ID 
-df2019 <- merge(FY19,Andrei, by = "Global_ID", all.x = TRUE)
+###### Merge ALL Cateogories sheet to Global ID sheet -  by Categorical name 
+FY19 <- merge(FY2019, Global_ID, by = "Categories", all.x = TRUE)
+
+##### Merge new dataframe with all categories and global ID to sheet with RCDC_Automated categories
+df2019 <- merge(FY19, RCDC_Automated, by = "Global_ID", all.y = TRUE)  (all.x = True - retains daya 
 #Reorder the DF by the "NEW updated 2019 Categorical name"
 df2019F <- df2019[order(df2019$All_Categories),]
 df2019F[is.na(df2019F)]<- 0

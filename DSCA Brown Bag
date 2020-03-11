@@ -5,13 +5,15 @@ library(tibble)
 ##### Set working directory 
 setwd("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [E] - Data Analysis/DSCA Brown Bag") 
 
-#Importing Sheet with All RCDC Categories 
+###################### IMPORT DATA INTO R STUDIO ######################
+
+#####Importing Sheet with All RCDC Categories 
 FY2019<- read_xlsx("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [E] - Data Analysis/DSCA Brown Bag/PS_Trend_2020EX.xlsx")
 
-#Importing Sheet with Disease Category Global ID 
+######Importing Sheet with Disease Category Global ID 
 Mark <- read_xlsx("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [E] - Data Analysis/DSCA Brown Bag/Mark.xlsx")
 
-Import Sheet with RCDC Automated Categories 
+######Import Sheet with RCDC Automated Categories 
 Andrei <- read_xlsx("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [E] - Data Analysis/DSCA Brown Bag/Andrei.xlsx")
 #Changing the name of the first column
 names(Andrei)[names(Andrei) == "Categories"] = "All_Categories"

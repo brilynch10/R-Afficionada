@@ -1,1 +1,28 @@
+library(readxl)
+library(tidyverse)
+library(tibble)
+
+##### Set working directory 
+setwd("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [E] - Data Analysis/DSCA Brown Bag") 
+
+#Importing Sheet with All RCDC Categories 
+FY2019<- read_xlsx("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [E] - Data Analysis/DSCA Brown Bag/PS_Trend_2020EX.xlsx")
+
+#Importing Sheet with Disease Category Global ID 
+Mark <- read_xlsx("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [E] - Data Analysis/DSCA Brown Bag/Mark.xlsx")
+
+Import Sheet with RCDC Automated Categories 
+Andrei <- read_xlsx("C:/Users/lynchba2/National Institutes of Health/Gichimu, Julia (NIH OD) [E] - Data Analysis/DSCA Brown Bag/Andrei.xlsx")
+#Changing the name of the first column
+names(Andrei)[names(Andrei) == "Categories"] = "All_Categories"
+
+
+
+#Merge by Categorical name 
+FY19 <- merge(FY2019,Mark, by = "Categories", all.x = TRUE)
+#Merge the data by Global_ID 
+df2019 <- merge(FY19,Andrei, by = "Global_ID", all.x = TRUE)
+#Reorder the DF by the "NEW updated 2019 Categorical name"
+df2019F <- df2019[order(df2019$All_Categories),]
+df2019F[is.na(df2019F)]<- 0
 
